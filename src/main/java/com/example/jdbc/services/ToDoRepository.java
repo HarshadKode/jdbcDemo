@@ -52,6 +52,27 @@ public class ToDoRepository {
         );
     }
 
+    public void update(ToDo todo) {
+        String sql = "UPDATE todo SET task = ? WHERE id = ?";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setString(1, todo.getTask());
+            ps.setLong(2, todo.getId());
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            throw new RuntimeException("Failed to update todo", ex);
+        }
+    }
 
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM todo WHERE id = ?";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setLong(1, id);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            throw new RuntimeException("Failed to delete", ex);
+        }
+    }
 
 }
